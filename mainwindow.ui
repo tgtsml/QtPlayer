@@ -10,13 +10,114 @@
     <height>514</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>GtPlayer</string>
+  <property name="styleSheet">
+   <string notr="true">QPushButton#pushButton_play{
+background:transparent;
+border:none;
+max-width:40px;
+min-width:40px;
+max-height:40px;
+min-height:40px;
+image:url(:/images/Play.png);
+}
+
+QPushButton#pushButton_play:hover{
+border:1px solid transparent;
+image:url(:/images/Play.png);
+}
+
+QPushButton#pushButton_play:checked{
+image:url(:/images/Pause.png);
+}
+
+QPushButton#pushButton_rewind{
+background:transparent;
+border:none;
+max-width:30px;
+min-width:30px;
+max-height:30px;
+min-height:30px;
+image:url(:/images/Rewind.png);
+}
+
+QPushButton#pushButton_rewind:hover{
+border:1px solid transparent;
+image:url(:/images/Rewind.png);
+}
+
+QPushButton#pushButton_fastForward{
+background:transparent;
+border:none;
+max-width:30px;
+min-width:30px;
+max-height:30px;
+min-height:30px;
+image:url(:/images/FastForward.png);
+}
+
+QPushButton#pushButton_fastForward:hover{
+border:1px solid transparent;
+image:url(:/images/FastForward.png);
+}
+
+QPushButton#pushButton_browser{
+background:skyblue;
+min-width:60px;
+min-height:25px;
+border:none;
+}
+
+QPushButton#pushButton_browser:hover{
+border:1px solid gray;
+}
+
+QLineEdit{
+background:white;
+min-height:22px;
+border:1px solid lightgray;
+font-size:12px;
+}
+
+QLineEdit:hover{
+border:1px solid gray;
+}
+
+QSlider::Horizontal{
+background:transparent;
+min-height:20px;
+max-height:20px;
+}
+QSlider::add-page:Horizontal{
+background-color: gray;
+}
+QSlider::sub-page:Horizontal {
+background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(255,0,255), stop:0.5 rgb(0,255,255), stop:1 rgb(255,255,0));
+}
+QSlider::groove:Horizontal {
+background:transparent;
+height:5px;
+}
+QSlider::handle:Horizontal {
+background-color:white;
+width:11px;
+margin: -3px 0px;
+border-radius:5px;
+}
+
+QSlider::handle:Horizontal:hover {
+background-color:red;
+}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0,0">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="spacing">
+       <number>10</number>
+      </property>
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
@@ -48,6 +149,9 @@
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>20</number>
+      </property>
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
@@ -64,28 +168,21 @@
       <item>
        <widget class="QPushButton" name="pushButton_rewind">
         <property name="text">
-         <string>Rewind</string>
+         <string/>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_play">
         <property name="text">
-         <string>Play</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_stop">
-        <property name="text">
-         <string>Stop</string>
+         <string/>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_fastForward">
         <property name="text">
-         <string>FastForward</string>
+         <string/>
         </property>
        </widget>
       </item>
