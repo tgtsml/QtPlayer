@@ -141,11 +141,29 @@ background-color:red;
      <widget class="QWidget" name="widget_content" native="true"/>
     </item>
     <item>
-     <widget class="QSlider" name="horizontalSlider_progress">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QLabel" name="label_playedTime">
+        <property name="text">
+         <string>00:00:00</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSlider" name="horizontalSlider_progress">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_totalTime">
+        <property name="text">
+         <string>00:00:00</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">

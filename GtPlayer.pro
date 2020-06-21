@@ -17,7 +17,7 @@ FORMS       += \
 
 INCLUDEPATH += $$PWD/include
 
-LIBS        += -L$$PWD/lib -lavcodec -lSDL2
+LIBS        += -L$$PWD/lib -lavcodec -lavdevice -lavfilter -lavformat -lavutil -lpostproc -lswresample -lswscale -lSDL2
 
 RESOURCES   += \
             res.qrc
