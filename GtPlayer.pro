@@ -18,3 +18,6 @@ FORMS       += \
 INCLUDEPATH += $$PWD/include
 
 LIBS        += -L$$PWD/lib -lavcodec -lSDL2
+
+RESOURCES += \
+    res.qrc
