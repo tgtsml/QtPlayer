@@ -98,7 +98,7 @@ background:transparent;
 height:5px;
 }
 QSlider::handle:Horizontal {
-background-color:white;
+background-color:lightgreen;
 width:11px;
 margin: -3px 0px;
 border-radius:5px;
@@ -106,6 +106,14 @@ border-radius:5px;
 
 QSlider::handle:Horizontal:hover {
 background-color:red;
+}
+
+QLabel{
+color:white;
+}
+
+QMessageBox QLabel{
+color:black;
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -142,6 +150,9 @@ background-color:red;
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <property name="spacing">
+       <number>10</number>
+      </property>
       <item>
        <widget class="QLabel" name="label_playedTime">
         <property name="text">

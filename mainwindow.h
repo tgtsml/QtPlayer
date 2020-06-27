@@ -15,6 +15,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void updateCurrentImage(QImage img);
+
 private slots:
     void on_pushButton_browser_clicked();
 
@@ -26,8 +28,12 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QImage m_currentImage;
 
 private:
-    void startPlay();
+//    void startPlay();
+
+protected:
+    void paintEvent(QPaintEvent *event);
 };
 #endif // MAINWINDOW_H
