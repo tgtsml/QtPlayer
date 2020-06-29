@@ -73,8 +73,13 @@ int PlayThread::playVideo()
     //char filepath[]="bigbuckbunny_480x272.h265";
     char filepath[]="Faded.mp4";
 
-    av_register_all();
-    avformat_network_init();
+    avcodec_register_all();
+
+    if(SDL_Init(SDL_INIT_AUDIO)) {
+        printf( "Could not initialize SDL - %s\n", SDL_GetError());
+        return -1;
+    }
+//    avformat_network_init();
     pFormatCtx = avformat_alloc_context();
 
     if(avformat_open_input(&pFormatCtx,filepath,NULL,NULL)!=0){
@@ -108,7 +113,15 @@ int PlayThread::playVideo()
     pFrame=av_frame_alloc();
     pFrameYUV=av_frame_alloc();
 
-    out_buffer=(unsigned char *)av_malloc(av_image_get_buffer_size(AV_PIX_FMT_YUV420P,  pCodecCtx->width, pCodecCtx->height,1));
+//    img_convert_ctx = sws_getContext(pCodecCtx->width, pCodecCtx->height,
+//            pCodecCtx->pix_fmt, pCodecCtx->width, pCodecCtx->height,
+//            AV_PIX_FMT_RGB32, SWS_BICUBIC, NULL, NULL, NULL);
+
+//    int numBytes = av_image_get_buffer_size(AV_PIX_FMT_RGB32, pCodecCtx->width,pCodecCtx->height, 1);
+
+//    out_buffer = (uint8_t *) av_malloc(numBytes * sizeof(uint8_t));
+
+    out_buffer=(unsigned char *)av_malloc(av_image_get_buffer_size(AV_PIX_FMT_RGB32,  pCodecCtx->width, pCodecCtx->height,1));
     av_image_fill_arrays(pFrameYUV->data, pFrameYUV->linesize,out_buffer,
         AV_PIX_FMT_YUV420P,pCodecCtx->width, pCodecCtx->height,1);
 
@@ -118,38 +131,14 @@ int PlayThread::playVideo()
     printf("-------------------------------------------------\n");
 
     img_convert_ctx = sws_getContext(pCodecCtx->width, pCodecCtx->height, pCodecCtx->pix_fmt,
-        pCodecCtx->width, pCodecCtx->height, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL, NULL);
+        pCodecCtx->width, pCodecCtx->height, AV_PIX_FMT_RGB32, SWS_BICUBIC, NULL, NULL, NULL);
 
 
-    if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER)) {
-        printf( "Could not initialize SDL - %s\n", SDL_GetError());
-        return -1;
-    }
-    //SDL 2.0 Support for multiple windows
-//    screen_w = pCodecCtx->width;
-//    screen_h = pCodecCtx->height;
-//    screen = SDL_CreateWindow("Simplest ffmpeg player's Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-//        screen_w, screen_h,SDL_WINDOW_OPENGL);
 
-//    if(!screen) {
-//        printf("SDL: could not create window - exiting:%s\n",SDL_GetError());
-//        return -1;
-//    }
-//    sdlRenderer = SDL_CreateRenderer(screen, -1, 0);
-    //IYUV: Y + U + V  (3 planes)
-    //YV12: Y + V + U  (3 planes)
-//    sdlTexture = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING,pCodecCtx->width,pCodecCtx->height);
-
-//    sdlRect.x=0;
-//    sdlRect.y=0;
-//    sdlRect.w=screen_w;
-//    sdlRect.h=screen_h;
 
     packet=(AVPacket *)av_malloc(sizeof(AVPacket));
 
     video_tid = SDL_CreateThread(sfp_refresh_thread,NULL,NULL);
-    //------------SDL End------------
-    //Event Loop
 
     for (;;) {
         //Wait
@@ -169,13 +158,6 @@ int PlayThread::playVideo()
             }
             if(got_picture){
                 sws_scale(img_convert_ctx, (const unsigned char* const*)pFrame->data, pFrame->linesize, 0, pCodecCtx->height, pFrameYUV->data, pFrameYUV->linesize);
-                //SDL---------------------------
-//                SDL_UpdateTexture( sdlTexture, NULL, pFrameYUV->data[0], pFrameYUV->linesize[0] );
-//                SDL_RenderClear( sdlRenderer );
-                //SDL_RenderCopy( sdlRenderer, sdlTexture, &sdlRect, &sdlRect );
-//                SDL_RenderCopy( sdlRenderer, sdlTexture, NULL, NULL);
-//                SDL_RenderPresent( sdlRenderer );
-                //SDL End-----------------------
 
                 //把这个RGB数据 用QImage加载
                 QImage tmpImg((uchar *)out_buffer,pCodecCtx->width,pCodecCtx->height,QImage::Format_RGB32);
