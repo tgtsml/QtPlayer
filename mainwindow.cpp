@@ -1,27 +1,23 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QPaintEvent>
 #include <QPainter>
 #include "playthread.h"
+#include <QTime>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //    qDebug()<<"FFmpeg config: "<<avcodec_configuration();
-    //    qDebug()<<"SDL init: "<<SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER);
-
     ui->pushButton_play->setCheckable(true);
 }
 
 MainWindow::~MainWindow()
 {
-//    m_playingThreadRunningFlag = false;
-    //    while(m_playingThreadRunningFlag);
     delete ui;
 }
 
@@ -40,7 +36,7 @@ void MainWindow::on_pushButton_browser_clicked()
 void MainWindow::on_pushButton_play_clicked()
 {
     if(!ui->pushButton_play->isChecked()){
-//        m_playingFlag = false;
+        emit signal_playPause();
     }
     else{
         QString filePath = ui->lineEdit_filePath->text();
@@ -54,25 +50,41 @@ void MainWindow::on_pushButton_play_clicked()
             QMessageBox::information(this, "提示", "播放文件不存在！");
             return;
         }
-//        startPlay();
-        PlayThread *playThread = new PlayThread;
-        connect(playThread, &PlayThread::signal_updateDisplayImage, this, &MainWindow::updateCurrentImage);
-        connect(playThread, &PlayThread::finished, playThread, &PlayThread::deleteLater);
-        playThread->start();
+        if(!m_playThread){
+            m_playThread = new PlayThread;
+            connect(m_playThread, &PlayThread::signal_updateDisplayImage, this, &MainWindow::slot_updateCurrentImage);
+            connect(m_playThread, &PlayThread::signal_updateTotalTime, this, &MainWindow::slot_updateTotalTime);
+            connect(m_playThread, &PlayThread::signal_updatePlayedTime, this, &MainWindow::slot_updatePlayedTime);
+            connect(m_playThread, &PlayThread::finished, [=](){m_playThread->deleteLater();m_playThread=nullptr;});
+            connect(this, &MainWindow::signal_playStart, m_playThread, &PlayThread::slot_play);
+            connect(this, &MainWindow::signal_playPause, m_playThread, &PlayThread::slot_pause);
+            connect(this, &MainWindow::signal_playRewind, m_playThread, &PlayThread::slot_rewind);
+            connect(this, &MainWindow::signal_playFastForward, m_playThread, &PlayThread::slot_forward);
+            connect(this, &MainWindow::signal_setFilePath, m_playThread, &PlayThread::slot_setFilePath);
+            m_playThread->start();
+            emit signal_setFilePath(filePath);
+            qDebug()<<"emited signal set file path";
+        }
+        else{
+            emit signal_playStart();
+        }
     }
 }
 
 void MainWindow::on_pushButton_rewind_clicked()
 {
-
+    int currentTime = ui->horizontalSlider_progress->value();
+    emit signal_playRewind(currentTime > 30 ? currentTime - 30 : 0);
 }
 
 void MainWindow::on_pushButton_fastForward_clicked()
 {
-
+    int currentTime = ui->horizontalSlider_progress->value();
+    int totalTime = ui->horizontalSlider_progress->maximum();
+    emit signal_playRewind(currentTime + 30 > totalTime ? totalTime : currentTime + 30);
 }
 
-void MainWindow::paintEvent(QPaintEvent *event)
+void MainWindow::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     painter.setBrush(Qt::black);
@@ -81,15 +93,24 @@ void MainWindow::paintEvent(QPaintEvent *event)
         return;
     }
 
-    QImage img = m_currentImage.scaled(this->size());
+    QImage img = m_currentImage.scaled(this->size(), Qt::KeepAspectRatio);
     int x = this->width() - img.width();
     int y = this->height() - img.height();
-    painter.drawImage(this->rect(),img);
-
+    painter.drawImage(x/2.0, y/2.0, img);
 }
 
-void MainWindow::updateCurrentImage(QImage img)
+void MainWindow::slot_updateCurrentImage(QImage img)
 {
     m_currentImage = img;
     update();
+}
+
+void MainWindow::slot_updateTotalTime(QTime time)
+{
+    ui->label_totalTime->setText(time.toString("hh:mm:ss"));
+}
+
+void MainWindow::slot_updatePlayedTime(QTime time)
+{
+    ui->label_playedTime->setText(time.toString("hh:mm:ss"));
 }
