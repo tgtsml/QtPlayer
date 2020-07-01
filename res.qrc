@@ -1,10 +1,19 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/FastForward.png</file>
         <file>images/GtPlayer.png</file>
         <file>images/Pause.png</file>
         <file>images/Play.png</file>
         <file>images/Rewind.png</file>
         <file>images/Stop.png</file>
+        <file>images/Circle.png</file>
+        <file>images/Circle1.png</file>
+        <file>images/Circle2.png</file>
+        <file>images/Forward.png</file>
+        <file>images/Fullscreen.png</file>
+        <file>images/Fullscreen2.png</file>
+        <file>images/Next.png</file>
+        <file>images/Previous.png</file>
+        <file>images/Settings.png</file>
+        <file>images/Volume.png</file>
     </qresource>
 </RCC>

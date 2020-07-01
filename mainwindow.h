@@ -28,7 +28,7 @@ private slots:
 
     void on_pushButton_rewind_clicked();
 
-    void on_pushButton_fastForward_clicked();
+    void on_pushButton_forward_clicked();
 
 private:
     Ui::MainWindow *ui;

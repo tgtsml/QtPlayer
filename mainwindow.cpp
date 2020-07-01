@@ -77,7 +77,7 @@ void MainWindow::on_pushButton_rewind_clicked()
     emit signal_playRewind(currentTime > 30 ? currentTime - 30 : 0);
 }
 
-void MainWindow::on_pushButton_fastForward_clicked()
+void MainWindow::on_pushButton_forward_clicked()
 {
     int currentTime = ui->horizontalSlider_progress->value();
     int totalTime = ui->horizontalSlider_progress->maximum();

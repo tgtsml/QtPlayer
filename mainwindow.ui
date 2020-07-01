@@ -11,7 +11,20 @@
    </rect>
   </property>
   <property name="styleSheet">
-   <string notr="true">QPushButton#pushButton_play{
+   <string notr="true">QWidget#widget_playControlWgt QPushButton{
+background:transparent;
+border:none;
+max-width:30px;
+min-width:30px;
+max-height:30px;
+min-height:30px;
+}
+
+QWidget#widget_playControlWgt QPushButton:hover{
+border:1px solid transparent;
+}
+
+QWidget#widget_playControlWgt QPushButton#pushButton_play{
 background:transparent;
 border:none;
 max-width:40px;
@@ -21,43 +34,48 @@ min-height:40px;
 image:url(:/images/Play.png);
 }
 
-QPushButton#pushButton_play:hover{
+QWidget#widget_playControlWgt QPushButton#pushButton_play:hover{
 border:1px solid transparent;
-image:url(:/images/Play.png);
 }
 
-QPushButton#pushButton_play:checked{
+QWidget#widget_playControlWgt QPushButton#pushButton_play:checked{
 image:url(:/images/Pause.png);
 }
 
 QPushButton#pushButton_rewind{
-background:transparent;
-border:none;
-max-width:30px;
-min-width:30px;
-max-height:30px;
-min-height:30px;
 image:url(:/images/Rewind.png);
 }
 
-QPushButton#pushButton_rewind:hover{
-border:1px solid transparent;
-image:url(:/images/Rewind.png);
+QPushButton#pushButton_forward{
+image:url(:/images/Forward.png);
 }
 
-QPushButton#pushButton_fastForward{
-background:transparent;
-border:none;
-max-width:30px;
-min-width:30px;
-max-height:30px;
-min-height:30px;
-image:url(:/images/FastForward.png);
+QPushButton#pushButton_settings{
+image:url(:/images/Settings.png);
 }
 
-QPushButton#pushButton_fastForward:hover{
-border:1px solid transparent;
-image:url(:/images/FastForward.png);
+QPushButton#pushButton_previous{
+image:url(:/images/Previous.png);
+}
+
+QPushButton#pushButton_next{
+image:url(:/images/Next.png);
+}
+
+QPushButton#pushButton_stop{
+image:url(:/images/Stop.png);
+}
+
+QPushButton#pushButton_volume{
+image:url(:/images/Volume.png);
+}
+
+QPushButton#pushButton_circle{
+image:url(:/images/Circle.png);
+}
+
+QPushButton#pushButton_fullscreen{
+image:url(:/images/Fullscreen.png);
 }
 
 QPushButton#pushButton_browser{
@@ -114,121 +132,213 @@ color:white;
 
 QMessageBox QLabel{
 color:black;
-}</string>
+}
+</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0,0">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <property name="spacing">
      <number>0</number>
     </property>
+    <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <property name="spacing">
-       <number>10</number>
-      </property>
-      <item>
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>文件路径：</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="lineEdit_filePath"/>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_browser">
-        <property name="text">
-         <string>浏览</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <widget class="QWidget" name="widget_filePathWgt" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>文件路径：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_filePath"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_browser">
+         <property name="text">
+          <string>浏览</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
     <item>
-     <widget class="QWidget" name="widget_content" native="true"/>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>384</height>
+       </size>
+      </property>
+     </spacer>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <property name="spacing">
-       <number>10</number>
-      </property>
-      <item>
-       <widget class="QLabel" name="label_playedTime">
-        <property name="text">
-         <string>00:00:00</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QSlider" name="horizontalSlider_progress">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_totalTime">
-        <property name="text">
-         <string>00:00:00</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="spacing">
-       <number>20</number>
-      </property>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_rewind">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_play">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton_fastForward">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
+     <widget class="QWidget" name="widget_playControlWgt" native="true">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <property name="spacing">
+          <number>10</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_playedTime">
+           <property name="text">
+            <string>00:00:00</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSlider" name="horizontalSlider_progress">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_totalTime">
+           <property name="text">
+            <string>00:00:00</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="spacing">
+          <number>10</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="pushButton_settings">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_rewind">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_previous">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_play">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_next">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_forward">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_stop">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_volume">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_circle">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButton_fullscreen">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
     </item>
    </layout>
   </widget>
