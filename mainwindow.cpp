@@ -21,31 +21,18 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_browser_clicked()
-{
-    QString strVideoPath = ui->lineEdit_filePath->text();
-    strVideoPath = QFileDialog::getOpenFileName(this, "Open Video File",
-                                                strVideoPath.isEmpty() ? QApplication::applicationDirPath() : strVideoPath,
-                                                "Video Files(*.mp4 *.flv *.avi *.ts *.mkv *.rmvb *.kux)");
-    if(strVideoPath.isEmpty()){
-        return;
-    }
-    ui->lineEdit_filePath->setText(strVideoPath);
-}
-
 void MainWindow::on_pushButton_play_clicked()
 {
     if(!ui->pushButton_play->isChecked()){
         emit signal_playPause();
     }
     else{
-        QString filePath = ui->lineEdit_filePath->text();
-        if(filePath.isEmpty()){
+        if(m_currentPlayingFile.isEmpty()){
             ui->pushButton_play->setChecked(false);
             QMessageBox::information(this, "提示", "请选择需要播放的文件！");
             return;
         }
-        if(!QFile::exists(filePath)){
+        if(!QFile::exists(m_currentPlayingFile)){
             ui->pushButton_play->setChecked(false);
             QMessageBox::information(this, "提示", "播放文件不存在！");
             return;
@@ -60,13 +47,13 @@ void MainWindow::on_pushButton_play_clicked()
             connect(this, &MainWindow::signal_playPause, m_playThread, &PlayThread::slot_pause);
             connect(this, &MainWindow::signal_playRewind, m_playThread, &PlayThread::slot_rewind);
             connect(this, &MainWindow::signal_playFastForward, m_playThread, &PlayThread::slot_forward);
-            connect(this, &MainWindow::signal_setFilePath, m_playThread, &PlayThread::slot_setFilePath);
+            m_playThread->setFilePath(m_currentPlayingFile);
             m_playThread->start();
-            emit signal_setFilePath(filePath);
-            qDebug()<<"emited signal set file path";
+            qDebug()<<"new thread and start play";
         }
         else{
             emit signal_playStart();
+            qDebug()<<"emited signal start play";
         }
     }
 }
@@ -113,4 +100,27 @@ void MainWindow::slot_updateTotalTime(QTime time)
 void MainWindow::slot_updatePlayedTime(QTime time)
 {
     ui->label_playedTime->setText(time.toString("hh:mm:ss"));
+}
+
+void MainWindow::on_pushButton_settings_clicked()
+{
+    QString strVideoPath = m_currentPlayingFile;
+    strVideoPath = QFileDialog::getOpenFileName(this, "Open Video File",
+                                                strVideoPath.isEmpty() ? QApplication::applicationDirPath() : strVideoPath,
+                                                "Video Files(*.mp4 *.flv *.avi *.ts *.mkv *.rmvb *.kux)");
+    if(strVideoPath.isEmpty()){
+        return;
+    }
+    m_currentPlayingFile = strVideoPath;
+    this->setWindowTitle(this->windowTitle().split(" ").first() + " " + QFileInfo(strVideoPath).fileName());
+}
+
+void MainWindow::on_pushButton_fullscreen_clicked()
+{
+    if(this->isFullScreen()){
+        this->showNormal();
+    }
+    else{
+        this->showFullScreen();
+    }
 }

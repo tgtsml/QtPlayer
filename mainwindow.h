@@ -22,22 +22,20 @@ public:
     void slot_updatePlayedTime(QTime time);
 
 private slots:
-    void on_pushButton_browser_clicked();
-
     void on_pushButton_play_clicked();
-
     void on_pushButton_rewind_clicked();
-
     void on_pushButton_forward_clicked();
+    void on_pushButton_settings_clicked();
+
+    void on_pushButton_fullscreen_clicked();
 
 private:
     Ui::MainWindow *ui;
     QImage m_currentImage;
-
+    QString m_currentPlayingFile;
     PlayThread *m_playThread;
 
 signals:
-    void signal_setFilePath(QString path);
     void signal_playStart();
     void signal_playPause();
     void signal_playRewind(int pos);

@@ -263,7 +263,7 @@ void PlayThread::run()
 }
 
 
-void PlayThread::slot_setFilePath(QString path)
+void PlayThread::setFilePath(QString path)
 {
     m_filePath = path;
     qDebug()<<"received set file path";

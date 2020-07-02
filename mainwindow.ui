@@ -153,29 +153,6 @@ color:black;
      <number>10</number>
     </property>
     <item>
-     <widget class="QWidget" name="widget_filePathWgt" native="true">
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>文件路径：</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_filePath"/>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_browser">
-         <property name="text">
-          <string>浏览</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
      <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>

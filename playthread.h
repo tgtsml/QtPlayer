@@ -23,7 +23,7 @@ private:
     int playVideo();
 
 public:
-    void slot_setFilePath(QString path);
+    void setFilePath(QString path);
     void slot_play();
     void slot_pause();
     void slot_rewind(int pos);
