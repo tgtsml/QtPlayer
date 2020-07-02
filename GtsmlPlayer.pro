@@ -8,11 +8,13 @@ DEFINES     += QT_DEPRECATED_WARNINGS
 SOURCES     += \
             main.cpp \
             mainwindow.cpp \
-            playthread.cpp
+            playthread.cpp \
+            xslider.cpp
 
 HEADERS     += \
             mainwindow.h \
-            playthread.h
+            playthread.h \
+            xslider.h
 
 FORMS       += \
             mainwindow.ui

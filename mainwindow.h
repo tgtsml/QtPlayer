@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 class PlayThread;
+class XSlider;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,11 +30,14 @@ private slots:
 
     void on_pushButton_fullscreen_clicked();
 
+    void on_pushButton_volume_clicked();
+
 private:
     Ui::MainWindow *ui;
     QImage m_currentImage;
     QString m_currentPlayingFile;
     PlayThread *m_playThread;
+    XSlider *m_volumeSlider;
 
 signals:
     void signal_playStart();
@@ -43,5 +47,6 @@ signals:
 
 protected:
     void paintEvent(QPaintEvent *event);
+    void resizeEvent(QResizeEvent *event);
 };
 #endif // MAINWINDOW_H

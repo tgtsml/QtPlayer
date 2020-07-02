@@ -7,13 +7,21 @@
 #include "playthread.h"
 #include <QTime>
 #include <QDebug>
+#include "xslider.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setFocusPolicy(Qt::StrongFocus);
+
     ui->pushButton_play->setCheckable(true);
+
+    m_volumeSlider = new XSlider(Qt::Vertical, this);
+    m_volumeSlider->setRange(0, 100);
+    m_volumeSlider->setFixedSize(20, 100);
+    m_volumeSlider->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -123,4 +131,20 @@ void MainWindow::on_pushButton_fullscreen_clicked()
     else{
         this->showFullScreen();
     }
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    if(m_volumeSlider->isVisible()){
+        m_volumeSlider->setVisible(false);
+    }
+    QMainWindow::resizeEvent(event);
+}
+
+void MainWindow::on_pushButton_volume_clicked()
+{
+    QPushButton *btn = ui->pushButton_volume;
+    m_volumeSlider->move(btn->x()+(m_volumeSlider->width())/2, this->height()-btn->y()-m_volumeSlider->height()-18);
+    m_volumeSlider->setVisible(true);
+    m_volumeSlider->setFocus();
 }
