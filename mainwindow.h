@@ -52,5 +52,7 @@ signals:
 protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *event);
+    void keyPressEvent(QKeyEvent *event);
+    void mouseDoubleClickEvent(QMouseEvent *event);
 };
 #endif // MAINWINDOW_H

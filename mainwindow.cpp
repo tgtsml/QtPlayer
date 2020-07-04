@@ -8,7 +8,6 @@
 #include <QTime>
 #include <QDebug>
 #include "xslider.h"
-#include "xbuttonlist.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -180,7 +179,26 @@ void MainWindow::on_pushButton_circle_clicked()
     btn->setStyleSheet("QPushButton#ListCirclePlay{image:url(:/images/Circle.png);}"
                         "QPushButton#SingleCirclePlay{image:url(:/images/Circle1.png);}"
                         "QPushButton#RandomCirclePlay{image:url(:/images/Circle2.png);}");
+}
 
-//    m_playStyle->move(btn->x(), this->height() - btn->y() - m_playStyle->height());
-//    m_playStyle->setVisible(true);
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Escape && this->isFullScreen()){
+        this->showNormal();
+        ui->pushButton_fullscreen->setChecked(false);
+    }
+    QMainWindow::keyPressEvent(event);
+}
+
+void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if(this->isFullScreen()){
+        this->showNormal();
+        ui->pushButton_fullscreen->setChecked(false);
+    }
+    else{
+        this->showFullScreen();
+        ui->pushButton_fullscreen->setChecked(true);
+    }
+    QMainWindow::mouseDoubleClickEvent(event);
 }
