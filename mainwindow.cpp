@@ -8,6 +8,7 @@
 #include <QTime>
 #include <QDebug>
 #include "xslider.h"
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,20 +16,25 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setFocusPolicy(Qt::StrongFocus);
+    m_playThread = nullptr;
+    setPlayControlBarAutoHide(true);
 
     ui->pushButton_play->setCheckable(true);
     ui->pushButton_fullscreen->setCheckable(true);
 
-//    m_volumeSlider = new XSlider(Qt::Vertical, this);
-//    m_volumeSlider->setFixedSize(20, 100);
+#ifdef verticalVolumeControl
+    m_volumeSlider = new XSlider(Qt::Vertical, this);
+    m_volumeSlider->setFixedSize(20, 100);
+#else
     m_volumeSlider = new XSlider(Qt::Horizontal, this);
     m_volumeSlider->setFixedSize(100, 20);
+#endif
     m_volumeSlider->setRange(0, 100);
     m_volumeSlider->setVisible(false);
 
-//    m_playStyle = new XButtonList(this);
-//    m_playStyle->setFixedSize(30, 90);
-//    m_playStyle->setVisible(false);
+    m_timerToHideControlBar = new QTimer(this);
+    m_timerToHideControlBar->setSingleShot(true);
+    connect(m_timerToHideControlBar, &QTimer::timeout, [=](){ui->widget_playControlWgt->setVisible(false);});
 }
 
 MainWindow::~MainWindow()
@@ -36,10 +42,61 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::setPlayControlBarAutoHide(bool autohide)
+{
+    this->setMouseTracking(autohide);
+    this->centralWidget()->setMouseTracking(autohide);
+    if(autohide){
+        ui->widget_playControlWgt->setVisible(true);
+    }
+}
+
+void MainWindow::slot_updateTotalTime(QTime time)
+{
+    ui->label_totalTime->setText(time.toString("hh:mm:ss"));
+}
+
+void MainWindow::slot_updatePlayedTime(QTime time)
+{
+    ui->label_playedTime->setText(time.toString("hh:mm:ss"));
+}
+
+void MainWindow::playStart()
+{
+    m_playThread->play();
+}
+
+void MainWindow::playStop()
+{
+    m_playThread->stop();
+}
+
+void MainWindow::playPause()
+{
+    m_playThread->pause();
+}
+
+void MainWindow::playRewind(int pos)
+{
+    m_playThread->rewind(pos);
+}
+
+
+void MainWindow::playForward(int pos)
+{
+    m_playThread->forward(pos);
+}
+
+void MainWindow::slot_updateCurrentImage(QImage img)
+{
+    m_currentImage = img;
+    update();
+}
+
 void MainWindow::on_pushButton_play_clicked()
 {
     if(!ui->pushButton_play->isChecked()){
-        emit signal_playPause();
+        playPause();
     }
     else{
         if(m_currentPlayingFile.isEmpty()){
@@ -58,16 +115,12 @@ void MainWindow::on_pushButton_play_clicked()
             connect(m_playThread, &PlayThread::signal_updateTotalTime, this, &MainWindow::slot_updateTotalTime);
             connect(m_playThread, &PlayThread::signal_updatePlayedTime, this, &MainWindow::slot_updatePlayedTime);
             connect(m_playThread, &PlayThread::finished, [=](){m_playThread->deleteLater();m_playThread=nullptr;});
-            connect(this, &MainWindow::signal_playStart, m_playThread, &PlayThread::slot_play);
-            connect(this, &MainWindow::signal_playPause, m_playThread, &PlayThread::slot_pause);
-            connect(this, &MainWindow::signal_playRewind, m_playThread, &PlayThread::slot_rewind);
-            connect(this, &MainWindow::signal_playFastForward, m_playThread, &PlayThread::slot_forward);
             m_playThread->setFilePath(m_currentPlayingFile);
             m_playThread->start();
             qDebug()<<"new thread and start play";
         }
         else{
-            emit signal_playStart();
+            playStart();
             qDebug()<<"emited signal start play";
         }
     }
@@ -76,45 +129,14 @@ void MainWindow::on_pushButton_play_clicked()
 void MainWindow::on_pushButton_rewind_clicked()
 {
     int currentTime = ui->horizontalSlider_progress->value();
-    emit signal_playRewind(currentTime > 30 ? currentTime - 30 : 0);
+    playRewind(currentTime > 30 ? currentTime - 30 : 0);
 }
 
 void MainWindow::on_pushButton_forward_clicked()
 {
     int currentTime = ui->horizontalSlider_progress->value();
     int totalTime = ui->horizontalSlider_progress->maximum();
-    emit signal_playRewind(currentTime + 30 > totalTime ? totalTime : currentTime + 30);
-}
-
-void MainWindow::paintEvent(QPaintEvent *)
-{
-    QPainter painter(this);
-    painter.setBrush(Qt::black);
-    painter.drawRect(0, 0, this->width(), this->height());
-    if (m_currentImage.size().width() <= 0){
-        return;
-    }
-
-    QImage img = m_currentImage.scaled(this->size(), Qt::KeepAspectRatio);
-    int x = this->width() - img.width();
-    int y = this->height() - img.height();
-    painter.drawImage(x/2.0, y/2.0, img);
-}
-
-void MainWindow::slot_updateCurrentImage(QImage img)
-{
-    m_currentImage = img;
-    update();
-}
-
-void MainWindow::slot_updateTotalTime(QTime time)
-{
-    ui->label_totalTime->setText(time.toString("hh:mm:ss"));
-}
-
-void MainWindow::slot_updatePlayedTime(QTime time)
-{
-    ui->label_playedTime->setText(time.toString("hh:mm:ss"));
+    playForward(currentTime + 30 > totalTime ? totalTime : currentTime + 30);
 }
 
 void MainWindow::on_pushButton_settings_clicked()
@@ -138,14 +160,6 @@ void MainWindow::on_pushButton_fullscreen_clicked()
     else{
         this->showFullScreen();
     }
-}
-
-void MainWindow::resizeEvent(QResizeEvent *event)
-{
-    if(m_volumeSlider->isVisible()){
-        m_volumeSlider->setVisible(false);
-    }
-    QMainWindow::resizeEvent(event);
 }
 
 void MainWindow::on_pushButton_volume_clicked()
@@ -177,8 +191,31 @@ void MainWindow::on_pushButton_circle_clicked()
     qDebug()<<currentPlayStyle;
 
     btn->setStyleSheet("QPushButton#ListCirclePlay{image:url(:/images/Circle.png);}"
-                        "QPushButton#SingleCirclePlay{image:url(:/images/Circle1.png);}"
-                        "QPushButton#RandomCirclePlay{image:url(:/images/Circle2.png);}");
+                       "QPushButton#SingleCirclePlay{image:url(:/images/Circle1.png);}"
+                       "QPushButton#RandomCirclePlay{image:url(:/images/Circle2.png);}");
+}
+
+void MainWindow::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+    painter.setBrush(Qt::black);
+    painter.drawRect(0, 0, this->width(), this->height());
+    if (m_currentImage.size().width() <= 0){
+        return;
+    }
+
+    QImage img = m_currentImage.scaled(this->size(), Qt::KeepAspectRatio);
+    int x = this->width() - img.width();
+    int y = this->height() - img.height();
+    painter.drawImage(x/2.0, y/2.0, img);
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    if(m_volumeSlider->isVisible()){
+        m_volumeSlider->setVisible(false);
+    }
+    QMainWindow::resizeEvent(event);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -188,6 +225,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         ui->pushButton_fullscreen->setChecked(false);
     }
     QMainWindow::keyPressEvent(event);
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    playPause();
+    QMainWindow::mousePressEvent(event);
 }
 
 void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
@@ -201,4 +244,21 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
         ui->pushButton_fullscreen->setChecked(true);
     }
     QMainWindow::mouseDoubleClickEvent(event);
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event)
+{
+    QWidget *widget = ui->widget_playControlWgt;
+    if(!widget->isVisible()){
+        m_timerToHideControlBar->stop();
+        widget->setVisible(true);
+    }
+    m_timerToHideControlBar->start(2000);
+
+    QMainWindow::mouseMoveEvent(event);
+}
+
+void MainWindow::on_pushButton_stop_clicked()
+{
+    playStop();
 }

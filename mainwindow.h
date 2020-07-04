@@ -5,7 +5,7 @@
 
 class PlayThread;
 class XSlider;
-class XButtonList;
+class QTimer;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,12 +28,11 @@ private slots:
     void on_pushButton_rewind_clicked();
     void on_pushButton_forward_clicked();
     void on_pushButton_settings_clicked();
-
     void on_pushButton_fullscreen_clicked();
-
     void on_pushButton_volume_clicked();
-
     void on_pushButton_circle_clicked();
+
+    void on_pushButton_stop_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -41,18 +40,21 @@ private:
     QString m_currentPlayingFile;
     PlayThread *m_playThread;
     XSlider *m_volumeSlider;
-//    XButtonList *m_playStyle;
+    QTimer *m_timerToHideControlBar;
 
-signals:
-    void signal_playStart();
-    void signal_playPause();
-    void signal_playRewind(int pos);
-    void signal_playFastForward(int pos);
+    void playStart();
+    void playStop();
+    void playPause();
+    void playRewind(int pos);
+    void playForward(int pos);
+    void setPlayControlBarAutoHide(bool autohide);
 
 protected:
     void paintEvent(QPaintEvent *event);
     void resizeEvent(QResizeEvent *event);
     void keyPressEvent(QKeyEvent *event);
+    void mousePressEvent(QMouseEvent *event);
     void mouseDoubleClickEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
 };
 #endif // MAINWINDOW_H

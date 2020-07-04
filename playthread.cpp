@@ -269,22 +269,27 @@ void PlayThread::setFilePath(QString path)
     qDebug()<<"received set file path";
 }
 
-void PlayThread::slot_play()
+void PlayThread::play()
 {
     m_playState = true;
 }
 
-void PlayThread::slot_pause()
+void PlayThread::stop()
 {
     m_playState = false;
 }
 
-void PlayThread::slot_rewind(int pos)
+void PlayThread::pause()
+{
+    m_playState = false;
+}
+
+void PlayThread::rewind(int pos)
 {
 
 }
 
-void PlayThread::slot_forward(int pos)
+void PlayThread::forward(int pos)
 {
 
 }

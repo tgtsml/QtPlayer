@@ -24,10 +24,11 @@ private:
 
 public:
     void setFilePath(QString path);
-    void slot_play();
-    void slot_pause();
-    void slot_rewind(int pos);
-    void slot_forward(int pos);
+    void play();
+    void stop();
+    void pause();
+    void rewind(int pos);
+    void forward(int pos);
 };
 
 #endif // PLAYTHREAD_H
