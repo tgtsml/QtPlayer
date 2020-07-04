@@ -74,8 +74,22 @@ QPushButton#pushButton_circle{
 image:url(:/images/Circle.png);
 }
 
+QPushButton#ListCirclePlay{
+image:url(:/images/Circle.png);
+}
+QPushButton#SingleCirclePlay{
+image:url(:/images/Circle1.png);
+}
+QPushButton#RandomCirclePlay{
+image:url(:/images/Circle2.png);
+}
+
 QPushButton#pushButton_fullscreen{
 image:url(:/images/Fullscreen.png);
+}
+
+QPushButton#pushButton_fullscreen:checked{
+image:url(:/images/Fullscreen2.png);
 }
 
 QPushButton#pushButton_browser{

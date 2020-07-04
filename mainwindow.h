@@ -5,6 +5,7 @@
 
 class PlayThread;
 class XSlider;
+class XButtonList;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,12 +33,15 @@ private slots:
 
     void on_pushButton_volume_clicked();
 
+    void on_pushButton_circle_clicked();
+
 private:
     Ui::MainWindow *ui;
     QImage m_currentImage;
     QString m_currentPlayingFile;
     PlayThread *m_playThread;
     XSlider *m_volumeSlider;
+//    XButtonList *m_playStyle;
 
 signals:
     void signal_playStart();

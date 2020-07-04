@@ -8,6 +8,7 @@
 #include <QTime>
 #include <QDebug>
 #include "xslider.h"
+#include "xbuttonlist.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,11 +18,18 @@ MainWindow::MainWindow(QWidget *parent)
     this->setFocusPolicy(Qt::StrongFocus);
 
     ui->pushButton_play->setCheckable(true);
+    ui->pushButton_fullscreen->setCheckable(true);
 
-    m_volumeSlider = new XSlider(Qt::Vertical, this);
+//    m_volumeSlider = new XSlider(Qt::Vertical, this);
+//    m_volumeSlider->setFixedSize(20, 100);
+    m_volumeSlider = new XSlider(Qt::Horizontal, this);
+    m_volumeSlider->setFixedSize(100, 20);
     m_volumeSlider->setRange(0, 100);
-    m_volumeSlider->setFixedSize(20, 100);
     m_volumeSlider->setVisible(false);
+
+//    m_playStyle = new XButtonList(this);
+//    m_playStyle->setFixedSize(30, 90);
+//    m_playStyle->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -144,7 +152,35 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 void MainWindow::on_pushButton_volume_clicked()
 {
     QPushButton *btn = ui->pushButton_volume;
-    m_volumeSlider->move(btn->x()+(m_volumeSlider->width())/2, this->height()-btn->y()-m_volumeSlider->height()-18);
+    if(m_volumeSlider->orientation() == Qt::Vertical){
+        m_volumeSlider->move(btn->x()+(m_volumeSlider->width())/2, this->height()-btn->y()-m_volumeSlider->height()-18);
+    }
+    else{
+        m_volumeSlider->move(btn->x() - m_volumeSlider->width() + 5, this->height() - btn->y() - 17);
+    }
     m_volumeSlider->setVisible(true);
     m_volumeSlider->setFocus();
+}
+
+void MainWindow::on_pushButton_circle_clicked()
+{
+    static int currentPlayStyle = 0;
+    QStringList btnObjectNameList;
+    btnObjectNameList<<"ListCirclePlay"<<"SingleCirclePlay"<<"RandomCirclePlay";
+
+    currentPlayStyle++;
+    if(currentPlayStyle >= btnObjectNameList.length()){
+        currentPlayStyle = 0;
+    }
+
+    QPushButton *btn = ui->pushButton_circle;
+    btn->setObjectName(btnObjectNameList.at(currentPlayStyle));
+    qDebug()<<currentPlayStyle;
+
+    btn->setStyleSheet("QPushButton#ListCirclePlay{image:url(:/images/Circle.png);}"
+                        "QPushButton#SingleCirclePlay{image:url(:/images/Circle1.png);}"
+                        "QPushButton#RandomCirclePlay{image:url(:/images/Circle2.png);}");
+
+//    m_playStyle->move(btn->x(), this->height() - btn->y() - m_playStyle->height());
+//    m_playStyle->setVisible(true);
 }

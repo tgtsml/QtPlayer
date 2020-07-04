@@ -9,11 +9,13 @@ SOURCES     += \
             main.cpp \
             mainwindow.cpp \
             playthread.cpp \
+            xbuttonlist.cpp \
             xslider.cpp
 
 HEADERS     += \
             mainwindow.h \
             playthread.h \
+            xbuttonlist.h \
             xslider.h
 
 FORMS       += \
