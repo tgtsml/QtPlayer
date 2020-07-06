@@ -48,6 +48,7 @@ private:
     void playRewind(int pos);
     void playForward(int pos);
     void setPlayControlBarAutoHide(bool autohide);
+    void restartControlBarHideTimer();
 
 protected:
     void paintEvent(QPaintEvent *event);

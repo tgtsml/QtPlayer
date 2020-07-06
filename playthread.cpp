@@ -35,7 +35,7 @@ int videoRefreshThread(void *){
             event.type = SFM_REFRESH_EVENT;
             SDL_PushEvent(&event);
         }
-        SDL_Delay(10);
+        SDL_Delay(1);
     }
     video_refresh_thread_exit=0;
     video_refresh_thread_pause=0;
@@ -198,6 +198,7 @@ void PlayThread::run()
         case SFM_REFRESH_EVENT:{
             if(av_read_frame(pFormatCtx, packet)<0){
                 video_refresh_thread_exit=1;
+                break;
             }
             if(packet->stream_index==audioStream){
                 int ret = avcodec_send_packet(pCodecCtx_Audio, packet);

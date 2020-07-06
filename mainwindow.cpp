@@ -230,6 +230,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     playPause();
+    restartControlBarHideTimer();
     QMainWindow::mousePressEvent(event);
 }
 
@@ -246,15 +247,19 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
     QMainWindow::mouseDoubleClickEvent(event);
 }
 
-void MainWindow::mouseMoveEvent(QMouseEvent *event)
+void MainWindow::restartControlBarHideTimer()
 {
     QWidget *widget = ui->widget_playControlWgt;
-    if(!widget->isVisible()){
+    if(!widget->isVisible() || m_timerToHideControlBar->isActive()){
         m_timerToHideControlBar->stop();
         widget->setVisible(true);
     }
     m_timerToHideControlBar->start(2000);
+}
 
+void MainWindow::mouseMoveEvent(QMouseEvent *event)
+{
+    restartControlBarHideTimer();
     QMainWindow::mouseMoveEvent(event);
 }
 
