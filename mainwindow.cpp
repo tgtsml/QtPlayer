@@ -63,28 +63,38 @@ void MainWindow::slot_updatePlayedTime(QTime time)
 
 void MainWindow::playStart()
 {
-    m_playThread->play();
+    if(m_playThread){
+        m_playThread->play();
+    }
 }
 
 void MainWindow::playStop()
 {
-    m_playThread->stop();
+    if(m_playThread && m_playThread->isRunning()){
+        m_playThread->stop();
+    }
 }
 
 void MainWindow::playPause()
 {
-    m_playThread->pause();
+    if(m_playThread && m_playThread->isRunning()){
+        m_playThread->pause();
+    }
 }
 
 void MainWindow::playRewind(int pos)
 {
-    m_playThread->rewind(pos);
+    if(m_playThread && m_playThread->isRunning()){
+        m_playThread->rewind(pos);
+    }
 }
 
 
 void MainWindow::playForward(int pos)
 {
-    m_playThread->forward(pos);
+    if(m_playThread->isRunning()){
+        m_playThread->forward(pos);
+    }
 }
 
 void MainWindow::slot_updateCurrentImage(QImage img)
@@ -230,7 +240,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     playPause();
-    restartControlBarHideTimer();
+    //    restartControlBarHideTimer();
     QMainWindow::mousePressEvent(event);
 }
 
@@ -259,7 +269,7 @@ void MainWindow::restartControlBarHideTimer()
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    restartControlBarHideTimer();
+    //    restartControlBarHideTimer();
     QMainWindow::mouseMoveEvent(event);
 }
 
